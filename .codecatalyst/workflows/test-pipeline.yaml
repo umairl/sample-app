@@ -1,0 +1,25 @@
+Name: test-pipeline
+SchemaVersion: "1.0"
+
+Triggers:
+  - Type: PUSH
+    Branches:
+      - main
+
+Actions:
+  BuildAndTest:
+    Identifier: aws/build@v1
+    Configuration:
+      Steps:
+        - Run: echo "Starting build process..."
+        - Run: npm install --no-audit --progress=false
+        - Run: npm install --only=dev --no-audit --progress=false
+        - Run: npm test
+        - Run: npm run build
+        - Run: echo "Build completed successfully!"
+    Compute:
+      Type: EC2
+      Fleet: Linux.x86-64.Large
+    Inputs:
+      Sources:
+        - WorkflowSource
