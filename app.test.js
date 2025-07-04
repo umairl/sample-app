@@ -4,11 +4,11 @@ const app = require('./app');
 let server;
 
 beforeAll((done) => {
-  server = app.listen(0, () => done()); // Random port for tests
+  server = app.listen(0, () => done()); // Random available port
 });
 
 afterAll((done) => {
-  server.close(done);
+  server.close(done); // Force server shutdown
 });
 
 describe('GET /', () => {
