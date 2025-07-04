@@ -1,0 +1,38 @@
+Name: test-pipeline
+SchemaVersion: "1.0"
+
+Triggers:
+  - Type: PUSH
+    Branches:
+      - main
+
+Actions:
+  BuildAndTest:
+    Identifier: aws/build@v1
+    Configuration:
+      Steps:
+        - Run: echo "Starting build process..."
+        - Run: npm install
+        - Run: npm test
+        - Run: npm run build
+        - Run: echo "Build completed successfully!"
+    Compute:
+      Type: EC2
+      Fleet: Linux.x86-64.Large
+    Inputs:
+      Sources:
+        - WorkflowSource
+
+  DeployToStaging:
+    Identifier: aws/build@v1
+    Configuration:
+      Steps:
+        - Run: echo "Demo deployment step (would deploy here in real scenario)"
+    DependsOn:
+      - BuildAndTest
+    Compute:
+      Type: EC2
+      Fleet: Linux.x86-64.Large
+    Inputs:
+      Sources:
+        - WorkflowSource
